@@ -1,1 +1,1 @@
-Hello This is a Test
+Select * from ANALYTICS_DB.BUSINESS.CULTIVATION_YIELDS
