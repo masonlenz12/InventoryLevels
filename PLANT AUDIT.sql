@@ -28,4 +28,51 @@ and lower(a.location) = lower(b.FACILITY)
 ;
 
 
-select * from ANALYTICS_DB.CULTIVATION.CURRENTLY_IN_FLOWERING
+select * from ANALYTICS_DB.CULTIVATION.CURRENTLY_IN_FLOWERING where LOCATION = 'Joliet' and ROOM_NUMBER = '130';
+select distinct ROOM_NAME from ANALYTICS_DB.CULTIVATION.BT_PLANT_CYCLES where LOCATION = 'Lincoln'
+
+select * from ANALYTICS_DB.CULTIVATION.PLANT_AUDIT;
+
+
+select * from DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW where ROOM in ('132', '134', '130', 'Flower 1-224', '2749', 'Flower 5-220', 'Flower 4-226') and HARVEST_START is null
+
+select concat(facility,room, min(START_PLACEMENT)) from DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW where HARVEST_DATE is null group by facility, room
+--FACILITY = 'Joliet' and ROOM in ('132', '134', '130', 'Flower 1-224', '2749', 'Flower 5-220', 'Flower 4-226') and
+select *
+from
+(select a.BEGIN_HARVEST_DATE, a.END_HARVEST_DATE, a.room, a.FACILITY  from DEMO_DB.PRODUCTION_PLAN.MITTO_USER_HARVEST a
+   group by  a.BEGIN_HARVEST_DATE, a.END_HARVEST_DATE, a.room, a.FACILITY) ly
+left join DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW a
+where a.FACILITY = ly.FACILITY
+and a.room = ly.room
+and concat(a.FACILITY, a.room, a.START_PLACEMENT) in (select concat(facility,room, min(START_PLACEMENT)) from DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW where HARVEST_DATE is null group by facility, room)
+and a.harvest_date is null;
+
+
+
+Update "DEMO_DB"."PRODUCTION_PLAN"."PLACEMENTNEW_TEST1" a
+set a.Harvest_Start = ly.BEGIN_HARVEST_DATE, a.Harvest_Date = ly.end_harvest_date
+from
+(select a.BEGIN_HARVEST_DATE, a.END_HARVEST_DATE, a.room, a.FACILITY  from DEMO_DB.PRODUCTION_PLAN.MITTO_USER_HARVEST a
+   group by  a.BEGIN_HARVEST_DATE, a.END_HARVEST_DATE, a.room, a.FACILITY) ly
+where a.FACILITY = ly.FACILITY
+and a.room = ly.room
+and concat(a.FACILITY, a.room, a.START_PLACEMENT) in (select concat(facility,room, min(START_PLACEMENT)) from DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW where HARVEST_DATE is null group by facility, room)
+and a.harvest_date is null;
+
+
+
+select * from DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW where FACILITY = 'Joliet' and ROOM in ('130','134','132') and PLANT_PLACEMENT > '2019-10-10'
+
+select * from DEMO_DB.PRODUCTION_PLAN.MITTO_USER_HARVEST
+--insert into DEMO_DB.PRODUCTION_PLAN.MITTO_USER_HARVEST
+--select NULL, 'Joliet', '130', '2020-02-06' , '2020-02-06', NULL, NULL
+--delete from DEMO_DB.PRODUCTION_PLAN.MITTO_USER_HARVEST;
+
+select * from ANALYTICS_DB.BUSINESS.CULTIVATION_YIELDS where LOCATION = 'Brookville' and DOMO_HARVEST_DATE > '2019-11-01'
+
+
+
+--delete from DEMO_DB.PRODUCTION_PLAN.PLACEMENT_NEW where FACILITY = 'Brookville' and PLANT_PLACEMENT in ('2019-12-06','2019-11-15') and room in ('Flower 1-224','Flower 4-226','Flower 5-220')
+--select * from DEMO_DB.PRODUCTION_PLAN.placement_new_DroppedRows_HISTORIC
+
